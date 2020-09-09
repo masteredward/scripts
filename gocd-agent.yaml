@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gocd-agent-k8s-{{ POD_POSTFIX }}
+  namespace: gocd-sandbox
+spec:
+  serviceAccountName: gocd-kaniko
+  containers:
+    - name: gocd-agent-k8s-{{ CONTAINER_POSTFIX }}
+      image: gocd/gocd-agent-alpine-3.11:v20.7.0
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - mountPath: /usr/local/bin/kubectl
+          name: kubectl
+  volumes:
+    - name: kubectl
+      hostPath:
+        path: /usr/local/bin/kubectl
+        type: File
